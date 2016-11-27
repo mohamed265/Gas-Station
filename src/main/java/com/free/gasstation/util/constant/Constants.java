@@ -28,6 +28,9 @@ public class Constants {
 
 	public final static String rememberMe = "rememberme";
 
+	public final static String code = "code";
+	public final static String activation = "activation";
+
 	public final static String NAME = "name";
 	public final static String CONTRY = "contry";
 	public final static String CITY = "city";
@@ -187,6 +190,14 @@ public class Constants {
 
 	public String getRememberme() {
 		return rememberMe;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public String getActivation() {
+		return activation;
 	}
 
 }

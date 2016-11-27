@@ -20,6 +20,7 @@ public class DBEnum {
 		public static final String securityQuestion = "security_question";
 		public static final String securityAnswer = "security_answer";
 		public static final String password = "password";
+		public static final String active = "active";
 	}
 
 }

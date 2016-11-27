@@ -176,6 +176,45 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
 				user.setSecurityQuestion(rs.getString(DBEnum.User.securityQuestion));
 				user.setSiteName(rs.getString(DBEnum.User.siteName));
 				user.setSiteNumber(rs.getString(DBEnum.User.siteNumber));
+				user.setActive(rs.getBoolean(DBEnum.User.active));
+			}
+
+			return user;
+		} catch (Exception e) {
+			logger.error(e);
+			return null;
+		} finally {
+			cleanUp(stmt, rs);
+		}
+	}
+
+	@Override
+	public User findUserByEmail(Connection connection, String email) {
+
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			String sql = "SELECT * FROM " + DBEnum.user + " WHERE " + DBEnum.User.email + " = ?";
+
+			stmt = connection.prepareStatement(sql);
+
+			stmt.setString(1, email);
+
+			rs = stmt.executeQuery();
+
+			User user = null;
+
+			if (rs.next()) {
+				user = new User();
+				user.setId(rs.getInt(DBEnum.User.id));
+				user.setUsername(rs.getString(DBEnum.User.userName));
+				user.setEmail(rs.getString(DBEnum.User.email));
+				user.setPassword(rs.getString(DBEnum.User.password));
+				user.setSecurityAnswer(rs.getString(DBEnum.User.securityAnswer));
+				user.setSecurityQuestion(rs.getString(DBEnum.User.securityQuestion));
+				user.setSiteName(rs.getString(DBEnum.User.siteName));
+				user.setSiteNumber(rs.getString(DBEnum.User.siteNumber));
+				user.setActive(rs.getBoolean(DBEnum.User.active));
 			}
 
 			return user;
@@ -194,7 +233,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
 			stmt = connection.prepareStatement("UPDATE  " + DBEnum.user + " SET " + DBEnum.User.securityAnswer
 					+ " = ?, " + DBEnum.User.userName + " = ?, " + DBEnum.User.email + " = ?, " + DBEnum.User.password
 					+ " = ?, " + DBEnum.User.securityQuestion + " = ?, " + DBEnum.User.siteName + " = ?, "
-					+ DBEnum.User.siteNumber + " = ? WHERE id = ?  ");
+					+ DBEnum.User.siteNumber + " = ?, " + DBEnum.User.active + " = ? WHERE id = ?  ");
 
 			stmt.setString(1, user.getSecurityAnswer());
 			stmt.setString(2, user.getUsername());
@@ -203,8 +242,8 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
 			stmt.setString(5, user.getSecurityQuestion());
 			stmt.setString(6, user.getSiteName());
 			stmt.setString(7, user.getSiteNumber());
-
-			stmt.setInt(8, user.getId());
+			stmt.setBoolean(8, user.getActive());
+			stmt.setInt(9, user.getId());
 
 			return stmt.executeUpdate() == 1;
 		} catch (Exception e) {

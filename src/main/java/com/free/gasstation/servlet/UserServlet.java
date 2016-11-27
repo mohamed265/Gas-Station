@@ -15,6 +15,7 @@ import com.free.gasstation.dto.User;
 import com.free.gasstation.exception.NotUniqueEmailException;
 import com.free.gasstation.exception.NotUniqueUserNameException;
 import com.free.gasstation.service.UserService;
+import com.free.gasstation.util.EmailManager;
 import com.free.gasstation.util.constant.Constants;
 
 @WebServlet("/User/UserServlet")
@@ -74,10 +75,10 @@ public class UserServlet extends HttpServlet {
 		String username = request.getParameter(Constants.USERNAME);
 		String password = request.getParameter(Constants.PASSWORD);
 		String remeberMe = request.getParameter(Constants.rememberMe);
-		
+
 		User user = userService.login(username, password);
 
-		if (user != null) {
+		if (user != null && user.getActive()) {
 			request.getSession().setAttribute(Constants.USER, user);
 			if (remeberMe != null && remeberMe.equals("on")) {
 				Cookie c = new Cookie("userId", user.getId() + "");
@@ -85,6 +86,9 @@ public class UserServlet extends HttpServlet {
 				response.addCookie(c);
 			}
 			msg = Constants.WELCOME;
+		} else if (user != null && !user.getActive()) {
+			response.sendRedirect("../" + Constants.INDEX + "?" + Constants.activation);
+			return;
 		}
 		response.sendRedirect("../" + Constants.INDEX + "?" + msg);
 	}
@@ -118,6 +122,8 @@ public class UserServlet extends HttpServlet {
 		String msg = "";
 		try {
 			user = userService.register(user);
+			EmailManager.send(email[0], "Activation Code", "Copy this code to activation Page " + user.getId());
+			msg = "registration successfuly go to your email for activation";
 		} catch (NotUniqueUserNameException e) {
 			logger.error(e);
 			msg = Constants.INTERNALERROR;
@@ -126,10 +132,10 @@ public class UserServlet extends HttpServlet {
 			msg = Constants.INTERNALERROR;
 		}
 
-		if (user != null && user.getStatus().equals(Constants.FAIL)) {
-			request.getSession().setAttribute(Constants.USER, user);
-			msg = Constants.WELCOME;
-		}
+		// if (user != null && user.getStatus().equals(Constants.FAIL)) {
+		// request.getSession().setAttribute(Constants.USER, user);
+		// msg = Constants.WELCOME;
+		// }
 		response.sendRedirect("../" + Constants.INDEX + "?" + msg);
 	}
 

@@ -24,6 +24,8 @@ public interface UserDao extends BaseDao {
 	public boolean isEmailExits(Connection connection, String email);
 
 	public User findUserByUsername(Connection connection, String username);
+	
+	public User findUserByEmail(Connection connection, String email);
 
 	public boolean isEmailExits(Connection connection, String email, int id);
 

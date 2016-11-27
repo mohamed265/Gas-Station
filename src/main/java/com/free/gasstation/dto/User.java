@@ -16,6 +16,7 @@ public class User extends BaseEntity {
 	private String siteNumber;
 	private String securityQuestion;
 	private String securityAnswer;
+	private Boolean active;
 	private String status;
 
 	public User() {
@@ -97,6 +98,14 @@ public class User extends BaseEntity {
 
 	public void setSecurityAnswer(String securityAnswer) {
 		this.securityAnswer = securityAnswer;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
 	public String getStatus() {

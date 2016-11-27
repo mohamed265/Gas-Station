@@ -10,7 +10,8 @@ CREATE TABLE `user` (
   `security_question` varchar(500) DEFAULT NULL,
   `security_answer` varchar(500) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL,
+  `active` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;

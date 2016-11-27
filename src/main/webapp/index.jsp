@@ -11,5 +11,6 @@
 	<h2>Hello World!</h2>
 	<a href="Login.jsp"> Login</a>
 	<a href="Registration.jsp"> Registration</a>
+	<a href="Activation.jsp"> Activation</a>
 </body>
 </html>

@@ -5,6 +5,6 @@
 <web-app>
   <display-name>Gas Station Web Application</display-name>
   <listener>
-  	<listener-class>com.free.gasstation.util.AppManager</listener-class>
+  	<listener-class>com.free.gasstation.util.AppContextListener</listener-class>
   </listener>
 </web-app>

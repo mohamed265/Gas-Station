@@ -82,14 +82,14 @@ public class UserService extends BaseService {
 		try {
 			connection = DBConnectionManager.getConnectionFromPool();
 
-			if (userDao.isUsernameExits(connection, user.getUsername())) {
+			if (userDao.isUsernameExits(connection, user.getUsername(), user.getId())) {
 				NotUniqueUserNameException e = new NotUniqueUserNameException(
 						"Creating user failed, " + user.getUsername() + " Already Exists");
 				logger.error(e);
 				throw e;
 			}
 
-			if (userDao.isEmailExits(connection, user.getEmail())) {
+			if (userDao.isEmailExits(connection, user.getEmail(), user.getId())) {
 				NotUniqueEmailException e = new NotUniqueEmailException(
 						"Creating user failed, " + user.getEmail() + " Already Exists");
 				logger.error(e);
@@ -103,6 +103,27 @@ public class UserService extends BaseService {
 		} finally {
 			DBConnectionManager.backConnectionToPool(connection);
 		}
+	}
+
+	public User activate(String email, String code) throws NotUniqueUserNameException, NotUniqueEmailException {
+		User user = null;
+		Connection connection = null;
+		try {
+			connection = DBConnectionManager.getConnectionFromPool();
+
+			user = userDao.findUserByEmail(connection, email);
+
+			if (user != null && !user.getActive() && user.getId() == Integer.parseInt(code)) {
+				user.setActive(true);
+				updateUser(user);
+			} else
+				user = null;
+		} catch (InterruptedException e) {
+			logger.error(e);
+		} finally {
+			DBConnectionManager.backConnectionToPool(connection);
+		}
+		return user;
 	}
 
 	public boolean isUsernameExits(String username) {

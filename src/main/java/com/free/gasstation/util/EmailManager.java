@@ -18,27 +18,29 @@ import org.apache.log4j.Logger;
  * @author Mohamed265
  *
  */
-public class EmailSender {
+public class EmailManager {
 
-	private static final Logger logger = Logger.getLogger(EmailSender.class);
+	private static final Logger logger = Logger.getLogger(EmailManager.class);
 
 	private static Session session;
 
 	private static String from;
+	private static String username;
+	private static String password;
 
 	public static void init() {
-		Properties props = new Properties();
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.socketFactory.port", "465");
-		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.port", "465");
+		Properties props = new EmailProperties().loadConfig();
+
+		from = props.getProperty("from");
+		username = props.getProperty("username");
+		password = props.getProperty("password");
 
 		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("username", "password");
+				return new PasswordAuthentication(username, password);
 			}
 		});
+		logger.info("EmailManager init successfly");
 	}
 
 	public static synchronized void send(String to, String subject, String content) {
@@ -63,5 +65,6 @@ public class EmailSender {
 
 	public static void close() {
 		session = null;
+		logger.info("EmailManager closed successfly");
 	}
 }
